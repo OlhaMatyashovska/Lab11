@@ -4,17 +4,27 @@
 <li><router-link to="/companies">Компанії</router-link></li>
 <li><router-link to="/author">Автор</router-link></li>
 <li><router-link to="/add">Додати</router-link></li>
+<h3 v-if="login">{{login}}</h3>
+<router-link to="/signin" v-else>Log in</router-link>
 </nav>
   <router-view>
   </router-view>
 </template>
 
-<script>
-export default{
+<script> 
+import storage from "./Storage";
+export default {
   name:"App",
   data(){
-    return{}
-  } 
+    return{
+      
+    }
+  },
+  computed: {
+     login() {
+      return  storage.login;
+     }
+  }
 }
 </script>
 

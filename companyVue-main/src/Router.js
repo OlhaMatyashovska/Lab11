@@ -3,7 +3,8 @@ import Author from './components/Author.vue';
 import FullScreenEditCompany from './components/FullScreenEditCompany.vue';
 import Companies from './components/Companies.vue';
 import CompanyDetails from './components/CompanyDetails.vue';
-import AddCompanyForm from './components/FullScreenAddCompany.vue';
+import AddCompanyForm from './components/FullScreenAddCompany.vue'; 
+import FullScreenSignIn from './components/FullScreenSignIn.vue';
 const Router = createRouter({  
     history:createWebHistory(),
     routes:[
@@ -30,6 +31,10 @@ const Router = createRouter({
       component: AddCompanyForm,
       props:true
    },
+   {
+      path:"/signin",
+      component:FullScreenSignIn
+   }
 ]
 });
 export default Router;
