@@ -8,7 +8,7 @@ companyRouter.get("/", companyController.get);
 companyRouter.get("/:id", companyController.getById);
 companyRouter.post("/",  companyController.post);
 companyRouter.delete("/:id", passport.authenticate("jwt", {session:false}), companyController.delete);
-companyRouter.patch("/:id", /* passport.authenticate("jwt", {session:false}),*/ companyController.patch);
-// companyRouter.put("/", companyController.put);
+companyRouter.patch("/:id", passport.authenticate("jwt", {session:false}), companyController.patch);
+companyRouter.put("/", companyController.put);
 
 export default companyRouter;

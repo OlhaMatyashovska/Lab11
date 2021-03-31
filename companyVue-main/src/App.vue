@@ -17,7 +17,7 @@ export default {
   name:"App",
   data(){
     return{
-      
+     
     }
   },
   computed: {
@@ -33,10 +33,9 @@ body{
   background-image:url(https://img.etimg.com/thumb/msid-69901533,width-640,resizemode-4,imgsize-114837/about-the-company.jpg);
   }
 li{
-  underline:none;
   margin:3px;
   
-  family-weight:5rem;
+  font-weight:5rem;
   border:3px solid blue; 
   list-style:none;
   float:left;

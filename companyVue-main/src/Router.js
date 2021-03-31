@@ -5,6 +5,8 @@ import Companies from './components/Companies.vue';
 import CompanyDetails from './components/CompanyDetails.vue';
 import AddCompanyForm from './components/FullScreenAddCompany.vue'; 
 import FullScreenSignIn from './components/FullScreenSignIn.vue';
+// import storage from  './Storage'; 
+import axios from 'axios';
 const Router = createRouter({  
     history:createWebHistory(),
     routes:[
@@ -14,7 +16,10 @@ const Router = createRouter({
      },
      {
         path:'/companies',
-        component: Companies
+        component: Companies,
+        meta: {
+         needAuth: true
+    }
      },
      {
         path:'/companydetails/:id',
@@ -24,7 +29,10 @@ const Router = createRouter({
      {
       path:'/edit/:id',
       component: FullScreenEditCompany,
-      props:true
+      props:true,
+      meta: {
+          needAuth: true
+      }
    },
    {
       path:'/add/',
@@ -36,5 +44,24 @@ const Router = createRouter({
       component:FullScreenSignIn
    }
 ]
+});
+
+Router.beforeEach( async (to, from, next) => {
+   if (to.meta && to.meta.needAuth){
+      try{
+          const token = localStorage.getItem("token");
+          await axios.get("http://localhost:5000/auth",
+          {
+              headers:{
+                  "Authorization": `Bearer ${token}`
+              }
+          });
+          next();
+      } catch (error){
+          next("/signin")
+      }
+  }
+  else
+      next(); 
 });
 export default Router;

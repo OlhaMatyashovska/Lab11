@@ -27,10 +27,14 @@ export default {
              })).data.token;
             storage.token = token;
             storage.signIn = true;
+            localStorage.setItem("token",token);
             this.$router.push("/companies");
 
          } catch (error){
-             console.log(error);
+             if(error.response.status == 404) {
+                 alert("невіриний логін або пароль(((");
+             }
+             console.log(error.response);
          }
        }
     }

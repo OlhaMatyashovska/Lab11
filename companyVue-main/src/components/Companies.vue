@@ -38,7 +38,7 @@
 <script>
 import BookTemplate from './BookTemplate.vue';
 import NewBookForm from './NewBookForm.vue';
-// import storage from '../Storage';
+import storage from './../Storage';
 import axios from "axios";
 export default {
   name: "App",
@@ -88,13 +88,21 @@ export default {
       } else alert("Виберіть компанію");
     },
    async deleteCompany() {
-      // let index = this.companies.findIndex(company => company.Id == this.selected);
-      // if (this.selected >= 0) this.companies.splice(index, 1);
         try {
-          let deletedBook = (await axios.delete(`http://localhost:5000/api/company/${this.selected}`)).data;
-          this.companies = [];
+          if(storage.token) {
+             let deletedBook = (await axios.delete(`http://localhost:5000/api/company/${this.selected}`,
+             {
+               headers: {
+                 "Authorization": `Bearer ${storage.token}`
+               }
+             }
+             )).data;
+              this.companies = [];
           alert(`Company ${deletedBook.Name} was deleted from data base!!!`);
           this.companies = (await axios.get("http://localhost:5000/api/company/")).data
+          } 
+          
+         
         } catch(err) {
           console.log(err);
         }

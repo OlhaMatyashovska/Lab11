@@ -16,7 +16,7 @@
 // import storage from '../Storage';
 import axios from "axios";
 
-export default{
+export default {
     props:{
         id:String
     },
@@ -43,6 +43,7 @@ export default{
             // this.$router.push(`/companydetails/${this.id}`);
             try {
               console.log(this.editCompany);
+              const token = localStorage.getItem("token");
               let updatedCompany= (await axios.patch(`http://localhost:5000/api/company/${this.id}`,
             {
               Name:this.editCompany.Name,
@@ -50,7 +51,13 @@ export default{
               NumberOfWorkers:this.editCompany.NumberOfWorkers,
               TypeOfProducts:this.editCompany.TypeOfProducts,
               
+            },
+            {
+               headers: {
+                Authorization: `Bearer ${token}`
+              }
             }
+            
           )
         ).data;
         this.$router.push(`/companydetails/${updatedCompany._id}`);
