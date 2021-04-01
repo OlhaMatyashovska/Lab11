@@ -4,8 +4,9 @@
 <li><router-link to="/companies">Компанії</router-link></li>
 <li><router-link to="/author">Автор</router-link></li>
 <li><router-link to="/add">Додати</router-link></li>
-<h3 v-if="login">{{login}}</h3>
+<h3 v-if="storage.login">{{storage.login}}</h3>
 <router-link to="/signin" v-else>Log in</router-link>
+<input type="button" value="вийти" @click="signOut">
 </nav>
   <router-view>
   </router-view>
@@ -17,13 +18,20 @@ export default {
   name:"App",
   data(){
     return{
-     
+      storage:storage,
     }
   },
-  computed: {
-     login() {
-      return  storage.login;
-     }
+  // computed: {
+  //    login() {
+  //     return  storage.login;
+  //    }
+  // }
+  methods: {
+    signOut() {
+      storage.login ="";
+      storage.token ="",
+      localStorage.removeItem("token");
+    }
   }
 }
 </script>

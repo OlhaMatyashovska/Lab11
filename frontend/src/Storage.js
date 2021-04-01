@@ -1,7 +1,8 @@
-const storage = {
+import {reactive} from 'reactive';
+const storage = reactive({
   isSignedIn :false,
   login:""
-}
+});
 export default storage;
 
 
