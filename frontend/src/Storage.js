@@ -1,4 +1,4 @@
-import {reactive} from 'reactive';
+import {reactive} from 'vue';
 const storage = reactive({
   isSignedIn :false,
   login:""

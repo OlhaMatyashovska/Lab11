@@ -52,8 +52,8 @@ mongoose.connect(dbUrl, dbOptions)
             };
 
             const httpsServer = https.createServer(httpsOptions, server);
-            httpsServer.listen(7443);
-            console.log("https://localhost:7443");
+            // httpsServer.listen(7443);
+            // console.log("https://localhost:7443");
             server.listen(5000);
             console.log("http://localhost:5000");
 
