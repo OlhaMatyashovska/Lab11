@@ -1,21 +1,22 @@
 <template>
-<button @click="gotoEdit">Редагувати інформацію про компанію</button>
-<div>
-<h1>{{company.Name}}</h1>
-
-<p>Виробництво:{{company.TypeOfProducts}}</p>
-                <p>Кількість робітників:{{company.NumberOfWorkers}}</p>
-               Країни-співробітники:
+  <div v-if="correctId">
+    <button type="button" @click="edit">Редагувати</button>
+    <h1>{{company.Name}}</h1>
+    <h2>Кількість робітників:{{company.NumberOfWorkers}}</h2>
+    <p>{{ company.NumberOfWorkers }}</p>
+    Країни-співробітники:
                  <ul>
                   <li v-for="country in company.Countries" :key="country">{{country}}</li>
                 </ul>
-</div>
+    
+  </div>
 </template>
 
 <script>
 // import storage from '../Storage';
-import axios from "axios";
-export default{
+//import axios from "axios";
+import networking from "../networking";
+export default {
     props:{
         id:String
     },
@@ -26,21 +27,26 @@ export default{
                  Countries:"",
                  NumberOfWorkers:0,
                  TypeOfProducts:""
-            }
+            }, 
+            correctId: false,
         }
     },
      async mounted(){
         // this.company = storage.companies.find(x => x.Id == Number(this.id));
       try {
-        this. company = (await axios.get(`http://localhost:5000/api/company/${this.id}`)).data; 
+        //this. company = (await axios.get(`http://localhost:5000/api/company/${this.id}`)).data;
+        this.company = await networking.getCompanyById(this.id);
+        console.log(this.company);
+        if (this.company) this.correctId = true;
+        else this.correctId = false; 
       }
       catch(err) {
         console.log(err);
       }
     },
     methods:{
-        gotoEdit(){
-            this.$router.push(`/edit/${this.id}`);
+        async edit() {
+           this.$router.push(`/edit/${this.id}`); 
         }
     }
 }

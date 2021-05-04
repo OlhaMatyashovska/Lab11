@@ -1,27 +1,13 @@
 <template>
 <div>
   <section class="control">
-    Вибрано книгу {{ selected }}
-    <input type="button" value="Додати нову компанію" v-on:click="showForm" style="display:none;"/>
-    <input type="button" value="Редагувати компанію" v-on:click="showEditForm" style="display:none;"/>
+    <router-link to="/add/"> Додати компанію </router-link>
     <input type="button" value="Вилучити інфу про компанію" v-on:click="deleteCompany"/>
     <input type="number" placeholder="min" v-model.number="minWorkerCount">
           <input type="number" placeholder="max" v-model.number="maxWorkerCount">
-          <input type="button" value="знайти" v-on:click="Find()">
-    
+          <input type="button" value="знайти" v-on:click="Find()"> 
   </section>
   <div>
-    <new-book-form 
-      v-model = "newCompany"
-      @submit.prevent="addNewCompany"
-      ref="newBookForm"> </new-book-form>
-      </div>
-      <div>
-    <new-book-form
-      v-model = "editCompany"
-      ref="editBookForm">
-    </new-book-form>
-    </div>
     <ul v-if="companies && companies.length>0">
       <book-template
         v-for="c in companies"
@@ -33,83 +19,40 @@
     </ul>
     <div v-else>Сервер завантажує дані про компанії</div>
   </div>
+    
+</div>
 </template>
 
 <script>
 import BookTemplate from './BookTemplate.vue';
-import NewBookForm from './NewBookForm.vue';
-import storage from './../Storage';
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 export default {
   name: "App",
   components:{
     BookTemplate,
-    NewBookForm
   },
   data() {
     return {
-      
-      selected: -1,
+      selected: null,
       minWorkerCount:0,
       maxWorkerCount:0,
-      companies:[],
-      newCompany:
-      {
-          Name:"",
-          Countries:"",
-          NumberOfWorkers:0,
-          TypeOfProducts:""
-      },
-      editCompany: {},
     };
   },
   methods: {
-    addNewCompany() {
-      console.log(this.newBook);
-      let newCompanyCopy = Object.assign({}, this.newCompany);
-      newCompanyCopy.Id = parseInt(Date.now());
-      newCompanyCopy.Countries=newCompanyCopy.Countries.split(",");
-      this.companies.push(newCompanyCopy);
-      this.showNewCompanyForm = false;
-    },
-    showForm() {
-      this.$refs.newBookForm.show();
-    },
+    ...mapActions([ "loadCompanies", "deleteCompanyById"]),
+    
     selectCompany(id) {
       this.selected = id;
     },
-    showEditForm() {
-      if (this.selected >= 0) {
-        let index = this.companies.findIndex(book => book.Id == this.selected);
-        this.editCompany = this.companies[index];
-        console.log(this.editCompany);
-        
-        this.$refs.editBookForm.show();
-      } else alert("Виберіть компанію");
-    },
+
    async deleteCompany() {
-        try {
-          if(storage.token) {
-             let deletedBook = (await axios.delete(`http://localhost:5000/api/company/${this.selected}`,
-             {
-               headers: {
-                 "Authorization": `Bearer ${storage.token}`
-               }
-             }
-             )).data;
-              this.companies = [];
-          alert(`Company ${deletedBook.Name} was deleted from data base!!!`);
-          this.companies = (await axios.get("http://localhost:5000/api/company/")).data
-          } 
-          
-         
-        } catch(err) {
-          console.log(err);
-        }
+      await this.deleteCompanyById(this.selected);
+    //   if (deletedBook)
+    //     showMessage("Успішне вилученн", `Книга ${deletedBook.Title} вилучена`);
+    // },
     },
-    closeForm(){
-      this.showNewCompanyForm = false;
-    },
+    
     async Find(){
         var z=this.minWorkerCount;
         var m=this.maxWorkerCount;
@@ -121,13 +64,18 @@ export default {
     }
   },
  async mounted() {
-   try {
-         this.companies = (await axios.get("http://localhost:5000/api/company/")).data;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-};
+  await this.loadCompanies();
+ },
+ computed: {
+   ...mapGetters(["companies"]),
+   areSomeCompanies() {
+      return this.companies.length > 0;
+    },
+    selectedEditURL() {
+      return `/edit/${this.selected}`;
+    },
+ }
+} 
 </script>
 
 <style scoped>

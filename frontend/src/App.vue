@@ -1,38 +1,30 @@
 <template>
-
+<div>
 <nav>
 <li><router-link to="/companies">Компанії</router-link></li>
 <li><router-link to="/author">Автор</router-link></li>
 <li><router-link to="/add">Додати</router-link></li>
-<h3 v-if="storage.login">{{storage.login}}</h3>
-<router-link to="/signin" v-else>Log in</router-link>
-<input type="button" value="вийти" @click="signOut">
+<sign-in-status-panel></sign-in-status-panel>
 </nav>
-  <router-view>
-  </router-view>
+<router-view></router-view>
+</div>
 </template>
 
 <script> 
-import storage from "./Storage";
+//import storage from "./Storage";
+import auth from "./auth";
+import SignInStatusPanel from "./components/SignInStatusPanel";
 export default {
   name:"App",
   data(){
-    return{
-      storage:storage,
-    }
+    return {}
   },
-  // computed: {
-  //    login() {
-  //     return  storage.login;
-  //    }
-  // }
-  methods: {
-    signOut() {
-      storage.login ="";
-      storage.token ="",
-      localStorage.removeItem("token");
-    }
-  }
+   components: {
+    SignInStatusPanel
+  },
+   mounted() {
+    auth.restoreSignInStatus();
+  },
 }
 </script>
 

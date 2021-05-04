@@ -21,7 +21,7 @@ export default {
   },
   methods:{
       showDetails(){
-          this.$router.push(`/companydetails/${this.company.Id}`);
+          this.$router.push(`/companydetails/${this.company._id}`);
       }
   }
 };

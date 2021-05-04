@@ -1,7 +1,7 @@
 <template>
 
 <div class="author">
-<h1>Лабораторна робота №10</h1>
+<h1>Лабораторна робота №13-14</h1>
      <h1>{{authorInfo.name}}</h1>
 
      <p>Рід діяльності:{{authorInfo.status}}</p>

@@ -13,20 +13,23 @@
 </template>
 <script> 
 // import storage from '../Storage';
-import axios from "axios";
-export default{
-   data(){
-       return{
+//import axios from "axios";
+import { mapActions } from "vuex";
+
+export default {
+   data() {
+       return {
            newCompany:
-      {
+           {
           Name:"",
           Countries:"",
           NumberOfWorkers:0,
           TypeOfProducts:""
-      },
+           },
        }
    },
    methods:{
+       ...mapActions(["addCompany"]),
       async add(){
            
     //   let newCompanyCopy = Object.assign({}, this.newCompany);
@@ -34,8 +37,12 @@ export default{
     //   newCompanyCopy.Countries=newCompanyCopy.Countries.split(",");
     //   storage.companies.push(newCompanyCopy);
     try {
-        let newCompanyCopy =  (await axios.post("http://localhost:5000/api/company/",this.newCompany)).data; 
-        this.$router.push(`/companydetails/${newCompanyCopy._id}`);
+        // let newCompanyCopy =  (await axios.post("http://localhost:5000/api/company/",this.newCompany)).data; 
+        // this.$router.push(`/companydetails/${newCompanyCopy._id}`);
+        const newCompanyCopy = await this.addCompany(this.newCompany);
+        if (newCompanyCopy) {
+          this.$router.push(`/companydetails/${newCompanyCopy._id}`);
+        }
     }catch(err) {
         console.log(err);
     } 
