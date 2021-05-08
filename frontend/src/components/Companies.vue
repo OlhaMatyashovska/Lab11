@@ -7,7 +7,7 @@
           <input type="number" placeholder="max" v-model.number="maxWorkerCount">
           <input type="button" value="знайти" v-on:click="Find()"> 
   </section>
-  <div>
+  <div data-test="companieslist">
     <ul v-if="companies && companies.length>0">
       <book-template
         v-for="c in companies"
