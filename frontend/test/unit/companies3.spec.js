@@ -30,18 +30,18 @@ jest.mock(
     "../../src/networking"
 );
 
-describe("Testing companies vuex unit part two", () => {
-    describe("test mutation addCompany", () => {
-        it("should state.companies be now with new company", () => {
+describe("Testing companies vuex unit part three", () => {
+    describe("test mutation removeCompany", () => {
+        it("should state.companies be now without the defined company", () => {
             const store = createStore({
                 state: {
                     companies: [...testCompanies]
                 },
                 mutations: {
-                    addCompany: companies.mutations.addCompany
+                    removeCompany: companies.mutations.removeCompany
                 }
             });
-            const addCompany = {
+            const companyToBeRemoved = {
                 "Countries": [
                     "China"
                 ],
@@ -51,65 +51,65 @@ describe("Testing companies vuex unit part two", () => {
                 "TypeOfProducts": "car produnction",
                 "__v": 0
             };
-            store.commit("addCompany", addCompany);
+            store.commit("removeCompany", companyToBeRemoved);
 
-            expect(store.state.companies).toContainEqual(addCompany);
+            expect(store.state.companies).not.toContainEqual(companyToBeRemoved);
         });
     });
 
-    describe("test vuex action loadCompanies", () => {
+    describe("test vuex action deleteCompany", () => {
 
-        it("should call networking.postCompany()", async () => {
+        it("should call networking.deleteCompany(id)", async () => {
             const store = createStore({
                 state: {
                     companies: []
                 },
                 mutations: {
-                    addCompany: companies.mutations.addCompany
+                    removeCompany: companies.mutations.removeCompany
                 }, actions: {
-                    addCompany: companies.actions.addCompany
+                    deleteCompanyById: companies.actions.deleteCompanyById
                 }
             });
 
-            await store.dispatch("addCompany");
+            await store.dispatch("deleteCompanyById");
 
-            expect(networking.postCompany).toHaveBeenCalled();
+            expect(networking.deleteCompany).toHaveBeenCalled();
         });
 
-        it("should save add test data to state.companies", async () => {
+        it("should remove test data from state.companies", async () => {
             const store = createStore({
                 state: {
                     companies: [...testCompanies]
                 },
                 mutations: {
-                    addCompany: companies.mutations.addCompany
+                    removeCompany: companies.mutations.removeCompany
                 }, actions: {
-                    addCompany: companies.actions.addCompany
+                    deleteCompanyById: companies.actions.deleteCompanyById
                 }
             });
-            const addCompany = {
-                "Countries": [
+            const company= {
+                Countries: [
                     "China"
                 ],
-                "_id": "606614aaa8083a37c823a7c8",
-                "Name": "tesla",
-                "NumberOfWorkers": 100000,
-                "TypeOfProducts": "car produnction",
-                "__v": 0
+                _id: "606614aaa8083a37c823a7c8",
+                Name: "tesla",
+                NumberOfWorkers: 100000,
+                TypeOfProducts: "car produnction",
+                __v: 0
             };
-            networking.postCompany = jest.fn(
+            networking.deleteCompany = jest.fn(
                 async () => {
                     return new Promise(
                         (resolve, reject) => {
-                            resolve(addCompany)
+                            resolve(company)
                         }
                     )
                 }
             );
 
-            await store.dispatch("addCompany",addCompany);
+            await store.dispatch("deleteCompanyById", company._id);
 
-            expect(store.state.companies).toContainEqual(addCompany);
+            expect(store.state.companies).not.toContainEqual(company);
         });
     });
 });
